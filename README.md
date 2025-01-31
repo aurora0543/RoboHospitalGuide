@@ -23,25 +23,29 @@ This project is a smart hospital guide robot developed using Raspberry Pi. It ai
 | 4WD Chassis        | Robot movement framework     |  
 | Rechargeable Battery | Power supply                 |  
 
+以下是 Project Structure (C++) 部分的 Markdown 格式修正版本：
+
 ## **Project Structure (C++)**  
-/Hospital-Guide-Robot
+
+Hospital-Guide-Robot/
 │── src/
-│   ├── main.cpp       # Main entry point, initializes all modules
-│   ├── navigation.cpp # Navigation module: path planning and direction control
-│   ├── face_recognition.cpp # Facial recognition module
-│   ├── obstacle_avoidance.cpp # Obstacle avoidance logic
-│   ├── motor_control.cpp # Motor control functions
-│   ├── sensors.cpp    # Sensor data processing (ultrasonic, gyroscope)
+│   ├── main.cpp                 # Main entry point, initializes all modules
+│   ├── navigation.cpp            # Navigation module: path planning and direction control
+│   ├── face_recognition.cpp      # Facial recognition module
+│   ├── obstacle_avoidance.cpp    # Obstacle avoidance logic
+│   ├── motor_control.cpp         # Motor control functions
+│   ├── sensors.cpp               # Sensor data processing (ultrasonic, gyroscope)
 │── include/
 │   ├── navigation.h
 │   ├── face_recognition.h
 │   ├── obstacle_avoidance.h
 │   ├── motor_control.h
 │   ├── sensors.h
-│── assets/ # Resources such as models and images
-│── config/ # Configuration files, e.g., path planning parameters
+│── assets/                        # Resources such as models and images
+│── config/                        # Configuration files, e.g., path planning parameters
 │── README.md
 │── LICENSE
+
 
 ## **Installation & Execution**  
 1. **Install Dependencies**:
