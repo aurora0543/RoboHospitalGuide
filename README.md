@@ -26,7 +26,7 @@ This project is a smart hospital guide robot developed using Raspberry Pi. It ai
 以下是 Project Structure (C++) 部分的 Markdown 格式修正版本：
 
 ## **Project Structure (C++)**  
-
+、、、
 Hospital-Guide-Robot/
 │── src/
 │   ├── main.cpp                 # Main entry point, initializes all modules
@@ -45,7 +45,7 @@ Hospital-Guide-Robot/
 │── config/                        # Configuration files, e.g., path planning parameters
 │── README.md
 │── LICENSE
-
+、、、
 
 ## **Installation & Execution**  
 1. **Install Dependencies**:
