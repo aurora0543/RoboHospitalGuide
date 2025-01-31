@@ -27,24 +27,39 @@ This project is a smart hospital guide robot developed using Raspberry Pi. It ai
 
 ## **Project Structure (C++)**  
 ```
-Hospital-Guide-Robot/
-│── src/
-│   ├── main.cpp                 # Main entry point, initializes all modules
-│   ├── navigation.cpp            # Navigation module: path planning and direction control
-│   ├── face_recognition.cpp      # Facial recognition module
-│   ├── obstacle_avoidance.cpp    # Obstacle avoidance logic
-│   ├── motor_control.cpp         # Motor control functions
-│   ├── sensors.cpp               # Sensor data processing (ultrasonic, gyroscope)
-│── include/
-│   ├── navigation.h
-│   ├── face_recognition.h
-│   ├── obstacle_avoidance.h
-│   ├── motor_control.h
-│   ├── sensors.h
-│── assets/                        # Resources such as models and images
-│── config/                        # Configuration files, e.g., path planning parameters
-│── README.md
-│── LICENSE
+├── Hospital-Guide-Robot/
+│   ├── CMakeLists.txt  # CMake 配置文件
+│   ├── src/
+│   │   ├── main.cpp  # 主程序
+│   │   ├── navigation.cpp  # 导航系统
+│   │   ├── face_recognition.cpp  # 面部识别
+│   │   ├── obstacle_avoidance.cpp  # 避障模块
+│   │   ├── motor_control.cpp  # 电机控制
+│   │   ├── sensors.cpp  # 传感器管理
+│   │   ├── core/
+│   │   │   ├── block.h  # Block 设计模式基类
+│   │   │   ├── navigation_block.cpp  # 导航Block
+│   │   │   ├── obstacle_block.cpp  # 避障Block
+│   │   ├── drivers/
+│   │   │   ├── ultrasonic_driver.cpp  # 超声波传感器驱动
+│   │   │   ├── gyroscope_driver.cpp  # 陀螺仪驱动
+│   │   │   ├── motor_driver.cpp  # 电机驱动
+│   ├── include/
+│   │   ├── navigation.h
+│   │   ├── face_recognition.h
+│   │   ├── obstacle_avoidance.h
+│   │   ├── motor_control.h
+│   │   ├── sensors.h
+│   │   ├── core/
+│   │   │   ├── block.h
+│   │   ├── drivers/
+│   │   │   ├── ultrasonic_driver.h
+│   │   │   ├── gyroscope_driver.h
+│   │   │   ├── motor_driver.h
+│   ├── assets/  # 存放资源文件，如图像模型
+│   ├── config/  # 配置文件，如路径参数
+│   ├── README.md  # 项目文档
+
 ```
 
 ## **Installation & Execution**  
