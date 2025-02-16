@@ -15,7 +15,7 @@ This project is a smart hospital guide robot developed using Raspberry Pi. It ai
 ## **Hardware Requirements**  
 | **Component**         | **Purpose**                    |  
 |----------------------|--------------------------------|  
-| Raspberry Pi 4B     | Core computing module         |  
+| Raspberry Pi 5B     | Core computing module         |  
 | Camera Module (Raspberry Pi Camera) | Facial recognition  |  
 | Ultrasonic Sensor (HC-SR04) | Obstacle detection       |  
 | Gyroscope (MPU6050) | Motion and direction sensing |  
