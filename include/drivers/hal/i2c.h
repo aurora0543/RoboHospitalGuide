@@ -1,19 +1,19 @@
 /**
- * @file block.h
+ * @file i2c.h
  * @brief Auto-generated header file.
  */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef I2C_H
+#define I2C_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void init_block(void);
+void init_i2c(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* BLOCK_H */
+#endif /* I2C_H */

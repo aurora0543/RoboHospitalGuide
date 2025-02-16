@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file i2c.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "i2c.h"
 
-void init_main.cpp(void) {
+void init_i2c(void) {
     // TODO: Implement this function
 }

@@ -1,19 +1,19 @@
 /**
- * @file block.h
+ * @file gpio.h
  * @brief Auto-generated header file.
  */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef GPIO_H
+#define GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void init_block(void);
+void init_gpio(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* BLOCK_H */
+#endif /* GPIO_H */

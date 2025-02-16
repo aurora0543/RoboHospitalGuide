@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file obstacle_block.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "obstacle_block.h"
 
-void init_main.cpp(void) {
+void init_obstacle_block(void) {
     // TODO: Implement this function
 }

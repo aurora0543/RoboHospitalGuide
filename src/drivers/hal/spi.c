@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file spi.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "spi.h"
 
-void init_main.cpp(void) {
+void init_spi(void) {
     // TODO: Implement this function
 }

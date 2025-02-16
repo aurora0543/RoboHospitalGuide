@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file gpio.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "gpio.h"
 
-void init_main.cpp(void) {
+void init_gpio(void) {
     // TODO: Implement this function
 }

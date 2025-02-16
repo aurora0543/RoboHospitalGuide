@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file pwm.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "pwm.h"
 
-void init_main.cpp(void) {
+void init_pwm(void) {
     // TODO: Implement this function
 }

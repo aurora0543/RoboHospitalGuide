@@ -1,13 +1,10 @@
 /**
- * @file ultrasonic_deriver.c
- * @brief Motor driver for hospital robot project
- * 
- * 
- * @author [Your Name]
- * @date 2025-02-16
- * @license MIT
+ * @file ultrasonic_driver.c
+ * @brief Auto-generated source file.
  */
 
- #include "ultrasonic_deriver.h"
- #include <stdio.h>   // For debugging (if needed)
+#include "ultrasonic_driver.h"
 
+void init_ultrasonic_driver(void) {
+    // TODO: Implement this function
+}

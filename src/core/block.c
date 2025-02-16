@@ -1,10 +1,10 @@
 /**
- * @file main.cpp
+ * @file block.c
  * @brief Auto-generated source file.
  */
 
-#include "main.cpp.h"
+#include "block.h"
 
-void init_main.cpp(void) {
+void init_block(void) {
     // TODO: Implement this function
 }
