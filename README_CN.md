@@ -24,47 +24,59 @@
 
 程序结构（C++）
 
-/Hospital-Guide-Robot
-│── src/
-│   ├── main.cpp       # 主程序入口，初始化所有功能
-│   ├── navigation.cpp # 导航模块，规划路径、调整方向
-│   ├── face_recognition.cpp # 面部识别模块
-│   ├── obstacle_avoidance.cpp # 避障逻辑
-│   ├── motor_control.cpp # 控制电机驱动
-│   ├── sensors.cpp    # 传感器数据处理（超声波、陀螺仪）
-│── include/
-│   ├── navigation.h
-│   ├── face_recognition.h
-│   ├── obstacle_avoidance.h
-│   ├── motor_control.h
-│   ├── sensors.h
-│── assets/ # 存放模型、图片等资源文件
-│── config/ # 配置文件，如路径规划参数
-│── README.md
-│── LICENSE
+# RoboHospitalGuide 项目目录结构
 
-安装与运行
-	1.	安装依赖：
+本项目采用模块化设计，遵循清晰的目录结构，便于维护和扩展。以下是项目的主要目录及其功能说明：
 
-sudo apt update
-sudo apt install libopencv-dev # OpenCV 处理图像
-sudo apt install wiringPi # 控制 GPIO
-
-
-	2.	克隆仓库：
-
-git clone https://github.com/your-repo/hospital-guide-robot.git
-cd hospital-guide-robot
-
-
-	3.	编译运行：
-
-mkdir build && cd build
-cmake ..
-make
-./hospital_guide_robot
-
-
+RoboHospitalGuide/
+├── build/                # 构建输出目录（由CMake生成）
+├── config/               # 项目配置文件
+│   └── project_config.hpp # 项目级配置头文件
+├── docs/                 # 文档目录
+│   ├── api/              # API参考文档
+│   └── design/           # 系统设计文档
+├── include/              # 公共头文件
+│   ├── core/             # 核心模块接口
+│   │   ├── block.hpp       # 基础块抽象类
+│   │   ├── navigation_block.hpp # 导航块接口
+│   │   └── obstacle_block.hpp   # 障碍块接口
+│   ├── drivers/          # 驱动层接口
+│   │   ├── gyroscope_driver.hpp # 陀螺仪驱动
+│   │   ├── motor_driver.hpp     # 电机驱动
+│   │   ├── ultrasonic_driver.hpp # 超声波驱动
+│   │   └── hal/           # 硬件抽象层
+│   │       ├── gpio.hpp      # GPIO驱动
+│   │       ├── i2c.hpp       # I2C驱动
+│   │       ├── pwm.hpp       # PWM驱动
+│   │       └── spi.hpp       # SPI驱动
+│   └── utils/            # 工具类接口
+│       ├── error_handling.hpp # 错误处理工具
+│       └── logger.hpp       # 日志系统
+├── scripts/              # 脚本目录（构建/部署脚本）
+├── src/                  # 源文件实现
+│   ├── core/             # 核心模块实现
+│   │   ├── block.cpp       # 基础块实现
+│   │   ├── navigation_block.cpp # 导航块实现
+│   │   └── obstacle_block.cpp   # 障碍块实现
+│   ├── drivers/          # 驱动层实现
+│   │   ├── gyroscope_driver.cpp # 陀螺仪驱动实现
+│   │   ├── motor_driver.cpp     # 电机驱动实现
+│   │   └── hal/           # 硬件抽象层实现
+│   │       ├── gpio.cpp      # GPIO驱动实现
+│   │       ├── i2c.cpp       # I2C驱动实现
+│   │       ├── pwm.cpp       # PWM驱动实现
+│   │       └── spi.cpp       # SPI驱动实现
+│   ├── utils/            # 工具类实现
+│   │   └── logger.cpp       # 日志系统实现
+│   └── main.cpp          # 主程序入口
+├── tests/                # 单元测试目录
+│   ├── core/             # 核心模块测试
+│   │   └── test_block.cpp  # 基础块测试用例
+│   ├── drivers/          # 驱动层测试
+│   └── hal/              # 硬件抽象层测试
+├── third_party/          # 第三方库目录
+├── CMakeLists.txt        # CMake构建配置文件
+└── README.md             # 项目说明文档
 
 未来版本更新
 
