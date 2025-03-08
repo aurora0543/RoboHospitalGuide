@@ -1,6 +1,6 @@
 // main.cpp
 #include <iomanip>
-#include "MPU6050.h"
+#include "MPU6050.hpp"
 #include <iostream>
 #include <csignal>
 #include <unistd.h>
