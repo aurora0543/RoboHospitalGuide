@@ -1,0 +1,123 @@
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
+
+#define PWM_CHIP "/sys/class/pwm/pwmchip0"
+#define PWM0 "/sys/class/pwm/pwmchip0/pwm0" // 左电机
+#define PWM1 "/sys/class/pwm/pwmchip0/pwm1" // 右电机
+#define PWM_SERVO "/sys/class/pwm/pwmchip0/pwm2" // 舵机
+
+// PWM 写入函数
+void pwm_write(const std::string &path, const std::string &value) {
+    std::ofstream file(path);
+    if (file.is_open()) {
+        file << value;
+        file.close();
+    } else {
+        std::cerr << "无法写入: " << path << std::endl;
+    }
+}
+
+// 启用 PWM 端口
+void enable_pwm(int pwm_num) {
+    std::string pwm_path = std::string(PWM_CHIP) + "/export";
+    pwm_write(pwm_path, std::to_string(pwm_num));
+    usleep(100000);
+}
+
+// 禁用 PWM 端口
+void disable_pwm(int pwm_num) {
+    std::string pwm_path = std::string(PWM_CHIP) + "/unexport";
+    pwm_write(pwm_path, std::to_string(pwm_num));
+}
+
+// 设置 PWM 参数
+void set_pwm(int pwm_num, int period, int duty_cycle, bool enable) {
+    std::string base_path = (pwm_num == 0) ? PWM0 : (pwm_num == 1) ? PWM1 : PWM_SERVO;
+
+    pwm_write(base_path + "/period", std::to_string(period));
+    pwm_write(base_path + "/duty_cycle", std::to_string(duty_cycle));
+    pwm_write(base_path + "/enable", enable ? "1" : "0");
+}
+
+// 控制电机（正值表示正转，负值表示反转）
+void motor_control(int speed_left, int speed_right) {
+    int period = 1000000; // 1ms 频率（1kHz）
+    int duty_left = (speed_left * period) / 100;
+    int duty_right = (speed_right * period) / 100;
+
+    set_pwm(0, period, duty_left, true);
+    set_pwm(1, period, duty_right, true);
+}
+
+// **舵机控制**
+void steer(int angle) {
+    int period = 20000000; // 20ms（50Hz）
+    int min_pulse = 500000; // 0.5ms（最左）
+    int max_pulse = 2500000; // 2.5ms（最右）
+
+    int duty_cycle = min_pulse + (angle * (max_pulse - min_pulse) / 180);
+
+    std::cout << "设定舵机角度: " << angle << "°" << std::endl;
+    set_pwm(2, period, duty_cycle, true);
+}
+
+// 运动控制
+void forward(int speed) {
+    std::cout << "小车前进" << std::endl;
+    motor_control(speed, -speed);
+}
+
+void backward(int speed) {
+    std::cout << "小车后退" << std::endl;
+    motor_control(-speed, speed);
+}
+
+void turn_left() {
+    std::cout << "小车左转" << std::endl;
+    steer(30); // 30° 左转
+}
+
+void turn_right() {
+    std::cout << "小车右转" << std::endl;
+    steer(150); // 150° 右转
+}
+
+void steer_center() {
+    std::cout << "舵机回正" << std::endl;
+    steer(90);
+}
+
+void stop() {
+    std::cout << "小车停止" << std::endl;
+    motor_control(0, 0);
+}
+
+int main() {
+    enable_pwm(0);
+    enable_pwm(1);
+    enable_pwm(2);
+
+    forward(50);
+    sleep(2);
+    
+    turn_left();
+    sleep(1);
+    
+    turn_right();
+    sleep(1);
+
+    steer_center();
+    sleep(1);
+    
+    backward(50);
+    sleep(2);
+    
+    stop();
+
+    disable_pwm(0);
+    disable_pwm(1);
+    disable_pwm(2);
+
+    return 0;
+}
