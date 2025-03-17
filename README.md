@@ -1,5 +1,7 @@
 # **Smart Hospital Guide Robot (Raspberry Pi-Based)**  
 
+![body](image/body.png)
+
 [CHN Version](README_CN.md)  
 
 ## **Project Overview**  
