@@ -3,8 +3,8 @@
 #include <unistd.h>   // For usleep()
 #include <sys/time.h> // For gettimeofday()
 
-#define TRIG  23  // Trigger pin (GPIO 23, Pin 16)
-#define ECHO  24  // Echo pin (GPIO 24, Pin 18)
+#define TRIG  24  // Trigger pin (GPIO 23, Pin 16)
+#define ECHO  25  // Echo pin (GPIO 24, Pin 18)
 
 // Get current time in microseconds
 long getMicrotime() {
