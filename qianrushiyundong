@@ -1,123 +1,144 @@
+#include <gpiod.h>
 #include <iostream>
-#include <fstream>
-#include <unistd.h>
+#include <atomic>
+#include <thread>
+#include <chrono>
+#include <csignal>
 
-#define PWM_CHIP "/sys/class/pwm/pwmchip0"
-#define PWM0 "/sys/class/pwm/pwmchip0/pwm0" // 左电机
-#define PWM1 "/sys/class/pwm/pwmchip0/pwm1" // 右电机
-#define PWM_SERVO "/sys/class/pwm/pwmchip0/pwm2" // 舵机
+// 直流电机 GPIO 引脚
+constexpr unsigned int AIN1 = 17;
+constexpr unsigned int AIN2 = 18;
+constexpr unsigned int BIN1 = 22;
+constexpr unsigned int BIN2 = 23;
 
-// PWM 写入函数
-void pwm_write(const std::string &path, const std::string &value) {
-    std::ofstream file(path);
-    if (file.is_open()) {
-        file << value;
-        file.close();
-    } else {
-        std::cerr << "无法写入: " << path << std::endl;
+// 舵机 GPIO 引脚（修改为你的接线）
+constexpr unsigned int SERVO_PIN = 12;
+
+// PWM 相关参数
+constexpr int PWM_FREQUENCY = 1000;   // 直流电机 PWM 频率 (Hz)
+constexpr int PWM_RESOLUTION = 100;   // 直流电机 PWM 占空比分辨率
+constexpr int SERVO_FREQUENCY = 50;   // 舵机 PWM 频率 (Hz)
+constexpr int SERVO_PERIOD_US = 20000;// 舵机 PWM 周期（20ms）
+constexpr int SERVO_MIN_US = 1000;    // 舵机最小脉宽（1ms，0°）
+constexpr int SERVO_MAX_US = 2000;    // 舵机最大脉宽（2ms，180°）
+
+// 全局变量
+struct gpiod_chip* chip = nullptr;
+struct gpiod_line* line_AIN1 = nullptr;
+struct gpiod_line* line_AIN2 = nullptr;
+struct gpiod_line* line_BIN1 = nullptr;
+struct gpiod_line* line_BIN2 = nullptr;
+struct gpiod_line* line_SERVO = nullptr;
+std::atomic<bool> running{true};
+
+// 退出信号处理
+void signalHandler(int signal) {
+    std::cout << "\n停止电机和舵机..." << std::endl;
+    running = false;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    gpiod_line_set_value(line_AIN1, 0);
+    gpiod_line_set_value(line_AIN2, 0);
+    gpiod_line_set_value(line_BIN1, 0);
+    gpiod_line_set_value(line_BIN2, 0);
+    gpiod_line_set_value(line_SERVO, 0);
+
+    if (line_AIN1) gpiod_line_release(line_AIN1);
+    if (line_AIN2) gpiod_line_release(line_AIN2);
+    if (line_BIN1) gpiod_line_release(line_BIN1);
+    if (line_BIN2) gpiod_line_release(line_BIN2);
+    if (line_SERVO) gpiod_line_release(line_SERVO);
+    if (chip) gpiod_chip_close(chip);
+
+    exit(0);
+}
+
+// 初始化 GPIO
+void setupGPIO() {
+    chip = gpiod_chip_open_by_name("gpiochip0");
+    if (!chip) throw std::runtime_error("无法打开 GPIO 芯片！");
+
+    line_AIN1 = gpiod_chip_get_line(chip, AIN1);
+    line_AIN2 = gpiod_chip_get_line(chip, AIN2);
+    line_BIN1 = gpiod_chip_get_line(chip, BIN1);
+    line_BIN2 = gpiod_chip_get_line(chip, BIN2);
+    line_SERVO = gpiod_chip_get_line(chip, SERVO_PIN);
+
+    if (!line_AIN1 || !line_AIN2 || !line_BIN1 || !line_BIN2 || !line_SERVO) {
+        throw std::runtime_error("无法获取 GPIO 线！");
+    }
+
+    gpiod_line_request_output(line_AIN1, "motor", 0);
+    gpiod_line_request_output(line_AIN2, "motor", 0);
+    gpiod_line_request_output(line_BIN1, "motor", 0);
+    gpiod_line_request_output(line_BIN2, "motor", 0);
+    gpiod_line_request_output(line_SERVO, "servo", 0);
+}
+
+// 直流电机 PWM 控制
+void pwmControl(int dutyCycle, bool forward, gpiod_line* pin1, gpiod_line* pin2) {
+    int period_us = 1000000 / PWM_FREQUENCY;
+    int high_time_us = (period_us * dutyCycle) / PWM_RESOLUTION;
+
+    while (running) {
+        gpiod_line_set_value(pin1, forward ? 1 : 0);
+        gpiod_line_set_value(pin2, forward ? 0 : 1);
+
+        if (high_time_us > 0) std::this_thread::sleep_for(std::chrono::microseconds(high_time_us));
+        if (dutyCycle < 100) {
+            gpiod_line_set_value(pin1, 0);
+            gpiod_line_set_value(pin2, 0);
+            std::this_thread::sleep_for(std::chrono::microseconds(period_us - high_time_us));
+        }
+    }
+
+    gpiod_line_set_value(pin1, 0);
+    gpiod_line_set_value(pin2, 0);
+}
+
+// 舵机控制
+void servoControl(int angle) {
+    if (angle < 0) angle = 0;
+    if (angle > 180) angle = 180;
+
+    int pulse_width = SERVO_MIN_US + ((SERVO_MAX_US - SERVO_MIN_US) * angle / 180);
+    while (running) {
+        gpiod_line_set_value(line_SERVO, 1);
+        std::this_thread::sleep_for(std::chrono::microseconds(pulse_width));
+        gpiod_line_set_value(line_SERVO, 0);
+        std::this_thread::sleep_for(std::chrono::microseconds(SERVO_PERIOD_US - pulse_width));
     }
 }
 
-// 启用 PWM 端口
-void enable_pwm(int pwm_num) {
-    std::string pwm_path = std::string(PWM_CHIP) + "/export";
-    pwm_write(pwm_path, std::to_string(pwm_num));
-    usleep(100000);
-}
-
-// 禁用 PWM 端口
-void disable_pwm(int pwm_num) {
-    std::string pwm_path = std::string(PWM_CHIP) + "/unexport";
-    pwm_write(pwm_path, std::to_string(pwm_num));
-}
-
-// 设置 PWM 参数
-void set_pwm(int pwm_num, int period, int duty_cycle, bool enable) {
-    std::string base_path = (pwm_num == 0) ? PWM0 : (pwm_num == 1) ? PWM1 : PWM_SERVO;
-
-    pwm_write(base_path + "/period", std::to_string(period));
-    pwm_write(base_path + "/duty_cycle", std::to_string(duty_cycle));
-    pwm_write(base_path + "/enable", enable ? "1" : "0");
-}
-
-// 控制电机（正值表示正转，负值表示反转）
-void motor_control(int speed_left, int speed_right) {
-    int period = 1000000; // 1ms 频率（1kHz）
-    int duty_left = (speed_left * period) / 100;
-    int duty_right = (speed_right * period) / 100;
-
-    set_pwm(0, period, duty_left, true);
-    set_pwm(1, period, duty_right, true);
-}
-
-// **舵机控制**
-void steer(int angle) {
-    int period = 20000000; // 20ms（50Hz）
-    int min_pulse = 500000; // 0.5ms（最左）
-    int max_pulse = 2500000; // 2.5ms（最右）
-
-    int duty_cycle = min_pulse + (angle * (max_pulse - min_pulse) / 180);
-
-    std::cout << "设定舵机角度: " << angle << "°" << std::endl;
-    set_pwm(2, period, duty_cycle, true);
-}
-
-// 运动控制
-void forward(int speed) {
-    std::cout << "小车前进" << std::endl;
-    motor_control(speed, -speed);
-}
-
-void backward(int speed) {
-    std::cout << "小车后退" << std::endl;
-    motor_control(-speed, speed);
-}
-
-void turn_left() {
-    std::cout << "小车左转" << std::endl;
-    steer(30); // 30° 左转
-}
-
-void turn_right() {
-    std::cout << "小车右转" << std::endl;
-    steer(150); // 150° 右转
-}
-
-void steer_center() {
-    std::cout << "舵机回正" << std::endl;
-    steer(90);
-}
-
-void stop() {
-    std::cout << "小车停止" << std::endl;
-    motor_control(0, 0);
-}
-
 int main() {
-    enable_pwm(0);
-    enable_pwm(1);
-    enable_pwm(2);
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
 
-    forward(50);
-    sleep(2);
-    
-    turn_left();
-    sleep(1);
-    
-    turn_right();
-    sleep(1);
+    try {
+        setupGPIO();
 
-    steer_center();
-    sleep(1);
-    
-    backward(50);
-    sleep(2);
-    
-    stop();
+        // 直流电机参数
+        int dutyCycleA = 50;
+        int dutyCycleB = 30;
+        bool motorA_forward = true;
+        bool motorB_forward = false;
 
-    disable_pwm(0);
-    disable_pwm(1);
-    disable_pwm(2);
+        // 启动直流电机 PWM 线程
+        std::thread motorA(pwmControl, dutyCycleA, motorA_forward, line_AIN1, line_AIN2);
+        std::thread motorB(pwmControl, dutyCycleB, motorB_forward, line_BIN1, line_BIN2);
+
+        // 舵机转向 90°
+        std::thread servoThread(servoControl, 90);
+
+        std::cout << "电机和舵机已启动，按 Ctrl+C 停止..." << std::endl;
+
+        motorA.join();
+        motorB.join();
+        servoThread.join();
+    } catch (const std::exception& e) {
+        std::cerr << "错误: " << e.what() << std::endl;
+        return 1;
+    }
 
     return 0;
 }
