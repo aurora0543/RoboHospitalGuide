@@ -12,7 +12,7 @@ constexpr unsigned int BIN1 = 22;
 constexpr unsigned int BIN2 = 23;
 
 // 舵机 GPIO 引脚
-constexpr unsigned int SERVO_PIN = 24;
+constexpr unsigned int SERVO_PIN = 12;
 
 // PWM 相关参数
 constexpr int PWM_FREQUENCY = 1000;   // 直流电机 PWM 频率 (Hz)
