@@ -30,6 +30,10 @@ include_directories(
 # 主程序
 add_executable(${PROJECT_NAME} 
     src/main.cpp
+        tests/drivers/motor_pwm/motor.cpp
+        tests/drivers/motor_pwm/motor.h
+        tests/drivers/motor_pwm/motor_test.cpp
+        tests/drivers/motor_pwm/web_control.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
