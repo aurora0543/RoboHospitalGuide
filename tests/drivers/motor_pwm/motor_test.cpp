@@ -1,4 +1,6 @@
 #include "motor.h"
+#include "sovor.h" // 包含舵机控制库
+#include "rpi_pwm.h"       // 包含 RPI_PWM 类的定义
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -38,18 +40,28 @@ int main() {
     // 根据实际硬件接线配置定义电机控制引脚
     MotorPins pins = {
         17, // 左轮 AIN1
-        18, // 左轮 AIN2
+        16, // 左轮 AIN2
         22, // 右轮 BIN1
         23  // 右轮 BIN2
     };
+
+    int servoChannel = 2;       // PWM 通道，根据你的硬件连接修改
+    int servoFrequency = 50;     // PWM 频率 (Hz)
+    RPI_PWM pwm;             // RPI_PWM 实例
+    int currentAngle = 0;    // текущий угол поворота сервопривода
 
     try {
         Motor motor(pins, false);
         enableRawMode();  // 进入原始模式
 
-        std::cout << "使用上下箭头控制汽车前进后退：" << std::endl;
+        // 初始化舵机
+        servo_init(pwm, servoChannel, servoFrequency);
+
+        std::cout << "使用上下左右箭头控制汽车运动：" << std::endl;
         std::cout << "    上箭头: 前进 (PWM 50%)" << std::endl;
         std::cout << "    下箭头: 后退 (PWM 60%)" << std::endl;
+        std::cout << "    左箭头: 左转 (舵机 30 度)" << std::endl;
+        std::cout << "    右箭头: 右转 (舵机 30 度)" << std::endl;
         std::cout << "    q 键: 退出程序" << std::endl;
 
         bool running = true;
@@ -70,6 +82,22 @@ int main() {
                         } else if (seq[1] == 'B') {  // 下箭头
                             std::cout << "后退" << std::endl;
                             motor.backwardRaw(35);
+                        } else if (seq[1] == 'C') {  // 右箭头
+                            std::cout << "右转" << std::endl;
+                            currentAngle += 40;
+                            if (currentAngle > 45) currentAngle = 45;
+                            servo_turn(pwm, 'R', currentAngle); // 调用舵机右转函数
+                            motor.stopRaw();           // 停止电机，根据需要调整
+                           // std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 增加延时
+                           // servo_center(pwm);
+                        } else if (seq[1] == 'D') {  // 左箭头
+                            std::cout << "左转" << std::endl;
+                            currentAngle -= 40;
+                            if (currentAngle < -45) currentAngle = -45;
+                            servo_turn(pwm, 'L', std::abs(currentAngle)); // 调用舵机左转函数
+                            motor.stopRaw();           // 停止电机，根据需要调整
+                           // std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 增加延时
+                           // servo_center(pwm);
                         }
                     }
                 } else if (ch == 'q') {
@@ -87,6 +115,7 @@ int main() {
         // 停止电机并清理资源
         motor.stopRaw();
         motor.cleanup();
+        pwm.stop(); // 停止 PWM 输出
     } catch (const std::exception &ex) {
         std::cerr << "错误: " << ex.what() << std::endl;
     }
