@@ -1,6 +1,5 @@
-// MPU6050.h
-#ifndef MPU6050_HPP
-#define MPU6050_HPP
+#ifndef MPU6050_H
+#define MPU6050_H
 
 #include <cstdint>
 #include <functional>
@@ -51,4 +50,4 @@ private:
     };
 };
 
-#endif // MPU6050_HPP
+#endif // MPU6050_H

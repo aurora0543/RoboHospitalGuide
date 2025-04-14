@@ -1,5 +1,5 @@
 // MPU6050.cpp
-#include "MPU6050.h"
+#include "mpu6050.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>

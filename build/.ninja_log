@@ -1,0 +1,11 @@
+# ninja log v5
+16	1048	1744600390173997027	CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o	8b1dd4e63b157ad2
+20	854	1744597925008991695	CMakeFiles/RoboHospitalGuide.dir/src/drivers/yaw_tracker.cpp.o	ed17306187641d64
+23	1952	1744596707298358376	CMakeFiles/RoboHospitalGuide.dir/src/drivers/motor.cpp.o	ad6595574dc24609
+24	1535	1744596706850356915	CMakeFiles/RoboHospitalGuide.dir/src/drivers/mpu6050.cpp.o	b4524ae9842b8f6b
+22	750	1744596706094354448	CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal/pwm.cpp.o	4179bdff46a1fb34
+22	374	1744596705710353193	CMakeFiles/RoboHospitalGuide.dir/src/drivers/MadgwickAHRS.cpp.o	801a0b872c4647d9
+26	2007	1744596707342358520	CMakeFiles/RoboHospitalGuide.dir/src/drivers/servo.cpp.o	9af9d3c1736108da
+1	16	0	/home/team24/RoboHospitalGuide/build/CMakeFiles/cmake.verify_globs	6758387c6e0de3db
+17	56	1744600637442540054	build.ninja	c3176caa8c2ee5b4
+1048	1156	1744600390281997218	RoboHospitalGuide	ec7359a11b0ce029
