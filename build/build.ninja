@@ -49,52 +49,59 @@ cmake_ninja_workdir = /home/team24/RoboHospitalGuide/build/
 
 build cmake_object_order_depends_target_RoboHospitalGuide: phony || CMakeFiles/RoboHospitalGuide.dir
 
+build CMakeFiles/RoboHospitalGuide.dir/src/core/nav.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/core/nav.cpp || cmake_object_order_depends_target_RoboHospitalGuide
+  DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/core/nav.cpp.o.d
+  FLAGS = -g -std=c++17
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
+  OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
+  OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/core
+
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/MadgwickAHRS.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/MadgwickAHRS.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/MadgwickAHRS.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers
 
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal/pwm.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/hal/pwm.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal/pwm.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal
 
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/motor.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/motor.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/motor.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers
 
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/mpu6050.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/mpu6050.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/mpu6050.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers
 
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/servo.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/servo.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/servo.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers
 
 build CMakeFiles/RoboHospitalGuide.dir/src/drivers/yaw_tracker.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/drivers/yaw_tracker.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/drivers/yaw_tracker.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src/drivers
 
 build CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o: CXX_COMPILER__RoboHospitalGuide_Debug /home/team24/RoboHospitalGuide/src/main.cpp || cmake_object_order_depends_target_RoboHospitalGuide
   DEP_FILE = CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o.d
   FLAGS = -g -std=c++17
-  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core
+  INCLUDES = -I/home/team24/RoboHospitalGuide/include -I/home/team24/RoboHospitalGuide/include/drivers -I/home/team24/RoboHospitalGuide/include/drivers/hal -I/home/team24/RoboHospitalGuide/include/core -I/home/team24/RoboHospitalGuide/config
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir
   OBJECT_FILE_DIR = CMakeFiles/RoboHospitalGuide.dir/src
 
@@ -106,7 +113,7 @@ build CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o: CXX_COMPILER__RoboHospita
 #############################################
 # Link the executable RoboHospitalGuide
 
-build RoboHospitalGuide: CXX_EXECUTABLE_LINKER__RoboHospitalGuide_Debug CMakeFiles/RoboHospitalGuide.dir/src/drivers/MadgwickAHRS.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal/pwm.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/motor.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/mpu6050.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/servo.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/yaw_tracker.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o | /usr/lib/aarch64-linux-gnu/libgpiod.so
+build RoboHospitalGuide: CXX_EXECUTABLE_LINKER__RoboHospitalGuide_Debug CMakeFiles/RoboHospitalGuide.dir/src/core/nav.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/MadgwickAHRS.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/hal/pwm.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/motor.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/mpu6050.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/servo.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/drivers/yaw_tracker.cpp.o CMakeFiles/RoboHospitalGuide.dir/src/main.cpp.o | /usr/lib/aarch64-linux-gnu/libgpiod.so
   FLAGS = -g
   LINK_LIBRARIES = /usr/lib/aarch64-linux-gnu/libgpiod.so
   OBJECT_DIR = CMakeFiles/RoboHospitalGuide.dir

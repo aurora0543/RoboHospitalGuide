@@ -1,0 +1,9 @@
+{
+    "path": [
+        { "action": "moveForward", "value": 1000 },
+        { "action": "turnLeft",    "value": 30 },
+        { "action": "moveForward", "value": 1000 },
+        { "action": "turnRight",   "value": 30 }
+    ]
+
+}

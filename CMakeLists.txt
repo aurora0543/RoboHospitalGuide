@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CONFIG_DIR ${CMAKE_SOURCE_DIR}/config)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -29,8 +31,12 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/main.cpp"
 )
 
+
+
 # 构建可执行文件
 add_executable(RoboHospitalGuide ${SRC_FILES})
+
+target_include_directories(RoboHospitalGuide PRIVATE ${CONFIG_DIR})
 
 # 链接库
 target_link_libraries(RoboHospitalGuide ${GPIOD_LIB})

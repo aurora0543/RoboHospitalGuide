@@ -1,3 +1,7 @@
+# 排除构建目录
+/build/
+/cmake-build-debug/
+/.vscode/
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
