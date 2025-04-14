@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 
+
 int main() {
     // 指定要播放的音频文件路径
     std::string audioFilePath = "Free_Test_Data_100KB_MP3.mp3";
@@ -19,5 +20,4 @@ int main() {
         std::cerr << "音频播放失败！" << std::endl;
     }
 
-    return 0;
 }
