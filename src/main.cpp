@@ -8,6 +8,7 @@
 #include "yaw_tracker.h"
 #include "nav.h"
 #include "json.hpp"  // nlohmann::json 的头文件
+#include "face_recognizer.h"
 
 // 播放音频文件的简单函数（需要 mplayer 工具安装）
 void playAudio(const std::string& audioFile) {
@@ -25,10 +26,26 @@ int main() {
     std::string audio_hold = "../source/hold.mp3";
     std::string audio_stop = "../source/stops.mp3";
 
+    std::string face_folder = "../source/face";
+    std::string capture_path = "../source/tmp/capture.jpg";
+
+    FaceRecognizerLib recognizer;
+
+    if (!recognizer.init(face_folder)) {
+        return -1;
+    }
+
+    std::string result = recognizer.recognize(capture_path);
+    std::cout << "识别结果：" << result << std::endl;
+
+
+
     try {
         Motor motor(pins);
         Servo servo(18);
         YawTracker yaw;
+
+
 
         // 在 main 中读取导航 JSON 配置文件
         nlohmann::json navJson;
@@ -42,7 +59,9 @@ int main() {
         }
 
         // 启动导航线程，将读取到的 navJson 传递给 navigationThread
-        std::thread navThread(Nav::navigationThread, &motor, &servo, &yaw, navJson);
+        std::string department = "Emergency Room";
+
+        std::thread navThread(Nav::navigationThread, &motor, &servo, &yaw, department, navJson);
 
         // 使用调试输出命令自动控制导航，不占用终端
         std::clog << "调试输出：启动导航\n";

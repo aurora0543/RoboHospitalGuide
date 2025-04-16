@@ -81,44 +81,43 @@ void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     servo.center();
 }
 
-void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, nlohmann::json navJson) {
+void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::string& target, nlohmann::json navJson) {
     Motor& m = *motor;
     Servo& s = *servo;
     YawTracker& y = *yaw;
-    
-    while (true) {
-        if (startNavigation.load()) {
-            std::cout << "\n🚦 开始导航...\n";
-            
-            if (!navJson.contains("path") || !navJson["path"].is_array()) {
-                std::cerr << "❌ 导航配置错误：缺少 path 数组\n";
-                startNavigation.store(false);
-                continue;
-            }
-            
-            for (const auto& step : navJson["path"]) {
-                if (!step.contains("action") || !step.contains("value")) {
-                    std::cerr << "❌ 导航步骤格式错误，缺少 action 或 value\n";
-                    continue;
-                }
-                std::string action = step["action"];
-                int value = step["value"];
-                if (action == "moveForward") {
-                    moveForward(m, value);
-                } else if (action == "turnLeft") {
-                    turnLeft(m, s, y, value);
-                } else if (action == "turnRight") {
-                    turnRight(m, s, y, value);
-                } else {
-                    std::cerr << "❌ 未知导航动作: " << action << "\n";
-                }
-            }
-            
-            std::cout << "🏁 导航完成！\n";
-            startNavigation.store(false);
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    std::cout << "\n🚦 开始导航 → 目标科室: " << target << "\n";
+
+    if (!navJson.contains(target)) {
+        std::cerr << "❌ 未找到目标科室 \"" << target << "\" 的导航路径\n";
+        return;
     }
+
+    if (!navJson[target].contains("path") || !navJson[target]["path"].is_array()) {
+        std::cerr << "❌ \"" << target << "\" 的导航数据无效或缺少 path\n";
+        return;
+    }
+
+    for (const auto& step : navJson[target]["path"]) {
+        if (!step.contains("action") || !step.contains("value")) {
+            std::cerr << "❌ 导航步骤格式错误，缺少 action 或 value\n";
+            continue;
+        }
+        std::string action = step["action"];
+        int value = step["value"];
+
+        if (action == "moveForward") {
+            moveForward(m, value);
+        } else if (action == "turnLeft") {
+            turnLeft(m, s, y, value);
+        } else if (action == "turnRight") {
+            turnRight(m, s, y, value);
+        } else {
+            std::cerr << "❌ 未知导航动作: " << action << "\n";
+        }
+    }
+
+    std::cout << "🏁 导航完成！\n";
 }
 
 }  // namespace Nav

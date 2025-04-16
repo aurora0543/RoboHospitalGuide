@@ -15,6 +15,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
 # 查找依赖库
 find_library(GPIOD_LIB gpiod REQUIRED)
+# 查找 OpenCV
+find_package(OpenCV REQUIRED)
+
 
 # 包含头文件路径
 include_directories(
@@ -39,4 +42,4 @@ add_executable(RoboHospitalGuide ${SRC_FILES})
 target_include_directories(RoboHospitalGuide PRIVATE ${CONFIG_DIR})
 
 # 链接库
-target_link_libraries(RoboHospitalGuide ${GPIOD_LIB})
+target_link_libraries(RoboHospitalGuide ${GPIOD_LIB} ${OpenCV_LIBS})

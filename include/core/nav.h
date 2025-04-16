@@ -31,7 +31,7 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle);
 void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle);
 
 // 导航线程函数：轮询控制标志完成一次导航动作（前进、左转、前进、右转）
-void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, nlohmann::json navJson);
+void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::string& target, nlohmann::json navJson);
 
 }  // namespace Nav
 
