@@ -1,56 +1,62 @@
-#ifndef ULTRASONIC_H
-#define ULTRASONIC_H
+#ifndef ULTRASONIC_SENSOR_H
+#define ULTRASONIC_SENSOR_H
 
-#include <wiringPi.h>
-#include <chrono>
+#include <gpiod.hpp>
+#include <functional>
+#include <atomic>
+#include <thread>
+#include <string>
 
-// 超声波传感器接口类，用于测量距离
-class Ultrasonic {
+/**
+ * @brief HC‑SR04 超声波传感器封装，自动在后台测距并通过回调报告
+ */
+class UltrasonicSensor {
 public:
-    // 构造：指定触发和接收引脚
-    Ultrasonic(int trigPin, int echoPin) : trigPin(trigPin), echoPin(echoPin) {
-        // 初始化引脚模式
-        wiringPiSetupGpio();
-        pinMode(trigPin, OUTPUT);
-        pinMode(echoPin, INPUT);
-        digitalWrite(trigPin, LOW);
-    }
+    using Callback = std::function<void(float)>;
 
-    // 读取当前距离，单位：cm
-    float readDistanceCm() {
-        using namespace std::chrono;
-        // 发出 10 微秒触发信号
-        digitalWrite(trigPin, HIGH);
-        delayMicroseconds(10);
-        digitalWrite(trigPin, LOW);
+    /**
+     * @param chip_name GPIO chip 名称（如 "gpiochip0"）
+     * @param trig_pin  触发引脚号（BCM 编号）
+     * @param echo_pin  回波引脚号（BCM 编号）
+     * @param callback  每次测量完成后调用，参数为测得的距离（cm）
+     */
+    UltrasonicSensor(const std::string& chip_name,
+                     int trig_pin,
+                     int echo_pin,
+                     Callback callback);
 
-        // 等待回声信号开始
-        while (digitalRead(echoPin) == LOW);
-        auto start = high_resolution_clock::now();
-        // 等待回声信号结束
-        while (digitalRead(echoPin) == HIGH);
-        auto end = high_resolution_clock::now();
+    /// 停止测距并释放资源
+    ~UltrasonicSensor();
 
-        // 计算时间差
-        float duration_us = duration_cast<microseconds>(end - start).count();
-        // 声速约 343m/s，往返距离
-        float distance_cm = duration_us * 0.0343f / 2.0f;
-        return distance_cm;
-    }
+    // 禁止拷贝
+    UltrasonicSensor(const UltrasonicSensor&) = delete;
+    UltrasonicSensor& operator=(const UltrasonicSensor&) = delete;
 
 private:
-    int trigPin;
-    int echoPin;
+    void measureDistance();  ///< 后台线程执行的测距循环
+
+    std::unique_ptr<gpiod::chip> chip;
+    gpiod::line              trig_line;
+    gpiod::line              echo_line;
+
+    std::atomic<bool> running;
+    std::thread       sensor_thread;
+    Callback          callback;
+
+
+    // 超声波传感器硬件接口定义
+    #define TRIG_FRONT 24
+    #define ECHO_FRONT 25
+    #define TRIG_LEFT  19
+    #define ECHO_LEFT  13
+    #define TRIG_RIGHT  6
+    #define ECHO_RIGHT  5
+    #define TRIG_REAR  12
+    #define ECHO_REAR   4
 };
 
-// 超声波传感器硬件接口定义
-#define TRIG_FRONT 19
-#define ECHO_FRONT 13
-#define TRIG_LEFT   6
-#define ECHO_LEFT   5
-#define TRIG_RIGHT 24
-#define ECHO_RIGHT 25
-#define TRIG_REAR  12
-#define ECHO_REAR   4
 
-#endif // ULTRASONIC_H
+
+
+#endif // ULTRASONIC_SENSOR_H
+

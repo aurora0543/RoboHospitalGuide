@@ -3,18 +3,14 @@
 #include <thread>        // 多线程与 sleep
 #include <chrono>        // 时间度量
 #include <cmath>         // 数学函数
-#include "ultrasonic.h" // 超声波传感器接口，用于检测障碍
+#include <gpiod.hpp>
+#include <sys/time.h>
+#include "ultrasonic.h"
 
 using namespace std::chrono;  // 简化时钟调用
 
 static constexpr float SAFE_DISTANCE = 20.0f;     // 安全距离阈值
 static constexpr float EXTRA_CLEARANCE = 10.0f;   // 额外清除距离
-
-// 模块内全局超声波传感器对象，trig/echo 在 ultrasonic.h 中定义
-Ultrasonic sensorFront(TRIG_FRONT, ECHO_FRONT);
-Ultrasonic sensorLeft (TRIG_LEFT,  ECHO_LEFT);
-Ultrasonic sensorRight(TRIG_RIGHT, ECHO_RIGHT);
-Ultrasonic sensorRear (TRIG_REAR,  ECHO_REAR);
 
 // 全局位置和航向，用于跨阶段累计
 struct Position { float x=0, y=0; };
@@ -32,11 +28,44 @@ void updatePosition(float dist, float heading) {
 
 // 匿名命名空间，用于内部函数实现
 namespace {
+    // 获取当前时间（微秒）
+    long getMicrotime() {
+        struct timeval tv;
+        gettimeofday(&tv, nullptr);
+        return tv.tv_sec * 1000000 + tv.tv_usec;
+    }
+
+    // 测量指定 trig/echo 引脚的距离（cm）
+    float measureDistance(int trigPin, int echoPin) {
+        gpiod::chip chip("gpiochip0");
+        auto trigLine = chip.get_line(trigPin);
+        auto echoLine = chip.get_line(echoPin);
+        trigLine.request({"ultrasonic", gpiod::line_request::DIRECTION_OUTPUT, 0}, 0);
+        echoLine.request({"ultrasonic", gpiod::line_request::DIRECTION_INPUT, 0});
+
+        // 触发超声波脉冲
+        trigLine.set_value(0);
+        std::this_thread::sleep_for(std::chrono::microseconds(2));
+        trigLine.set_value(1);
+        std::this_thread::sleep_for(std::chrono::microseconds(10));
+        trigLine.set_value(0);
+
+        // 等待回声开始
+        while (echoLine.get_value() == 0);
+        long startTime = getMicrotime();
+        // 等待回声结束
+        while (echoLine.get_value() == 1);
+        long travelTime = getMicrotime() - startTime;
+
+        // 声速约 343 m/s -> 0.0343 cm/µs，除以 2 得到距离
+        return travelTime * 0.0343f / 2.0f;
+    }
+
     // 检测前方障碍
     bool isObstacleAhead() {
-        float d = sensorFront.read();            // 读取前方距离
+        float d = measureDistance(TRIG_FRONT, ECHO_FRONT);
         std::cout << "[检测] 前方距离 = " << d << " cm\n";
-        return d < SAFE_DISTANCE;                // 小于阈值即为障碍
+        return d < SAFE_DISTANCE;
     }
 }
 
@@ -70,7 +99,7 @@ namespace Nav {
                                 m.stop();
                                 break;
                             }
-                            std::this_thread::sleep_for(milliseconds(10));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(10));
                             remaining -= 1.0f;
                             updatePosition(1.0f, heading);
                         }
@@ -78,14 +107,14 @@ namespace Nav {
                         if (remaining > 0.0f) {
                             std::cout << "⬆️ 回到原航向后继续前进 " << remaining << " cm\n";
                             m.forward(30);
-                            std::this_thread::sleep_for(milliseconds((int)(remaining * 10)));
+                            std::this_thread::sleep_for(std::chrono::milliseconds((int)(remaining * 10)));
                             updatePosition(remaining, heading);
                             m.stop();
                         }
 
                     } else if (action == "turnLeft") {
                         std::cout << "↪️ 左转 " << value << " 度...\n";
-                        turnLeft(m, s, y, value);
+                        Nav::turnLeft(m, s, y, value);
                         heading = std::fmod(heading + value + 360.0f, 360.0f);
                         // ✅ 合并 lateralComp 到本阶段 value 中
                         if (lateralComp != 0.0f) {
@@ -97,16 +126,13 @@ namespace Nav {
                             float adjusted = sameDirection ? (value - std::abs(lateralComp))
                                                           : (value + std::abs(lateralComp));
 
-                            std::cout << "➡️ 已合并侧向补偿，调整前进距离为 " << adjusted << " cm
-";
+                            std::cout << "➡️ 已合并侧向补偿，调整前进距离为 " << adjusted << " cm\n";
                             value = adjusted;
                             lateralComp = 0.0f;
                         }
-}
-
                     } else if (action == "turnRight") {
                         std::cout << "↩️ 右转 " << value << " 度...\n";
-                        turnRight(m, s, y, value);
+                        Nav::turnRight(m, s, y, value);
                         heading = std::fmod(heading - value + 360.0f, 360.0f);
                         // ⛔️ 已合并到 moveForward 中，此处不再执行
 
@@ -118,7 +144,7 @@ namespace Nav {
                 std::cout << "🏁 导航完成！\n";
                 startNavigation.store(false);
             }
-            std::this_thread::sleep_for(milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
 
@@ -131,27 +157,28 @@ namespace Nav {
         float pending = remaining;
         std::cout << "[避障] 记录剩余距离: " << pending << " cm\n";
 
-        float ld = sensorLeft.read();
-        float rd = sensorRight.read();
+        float ld = measureDistance(TRIG_LEFT, ECHO_LEFT);
+        float rd = measureDistance(TRIG_RIGHT, ECHO_RIGHT);
         bool goLeft = (ld > rd);
         std::cout << "[避障] 选择" << (goLeft?"左侧":"右侧") << "避障\n";
 
-        if (goLeft) { turnLeft(m, s, y, 90); heading = std::fmod(heading + 90 + 360.0f, 360.0f); }
-        else       { turnRight(m,s, y, 90); heading = std::fmod(heading - 90 + 360.0f, 360.0f); }
+        if (goLeft) { Nav::turnLeft(m, s, y, 90); heading = std::fmod(heading + 90 + 360.0f, 360.0f); }
+        else       { Nav::turnRight(m,s, y, 90); heading = std::fmod(heading - 90 + 360.0f, 360.0f); }
 
         float lateral = 0.0f;
         while (true) {
-            float sense = goLeft? sensorRight.read(): sensorLeft.read();
+            float sense = goLeft ? measureDistance(TRIG_RIGHT, ECHO_RIGHT)
+                                  : measureDistance(TRIG_LEFT,  ECHO_LEFT);
             if (sense >= SAFE_DISTANCE) break;
             m.forward(30);
-            std::this_thread::sleep_for(milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             lateral += 1.0f;
             updatePosition(1.0f, heading);
         }
 
         std::cout << "[避障] 侧边安全，额外前进 " << EXTRA_CLEARANCE << " cm\n";
         m.forward(30);
-        std::this_thread::sleep_for(milliseconds((int)(EXTRA_CLEARANCE * 10)));
+        std::this_thread::sleep_for(std::chrono::milliseconds((int)(EXTRA_CLEARANCE * 10)));
         lateral += EXTRA_CLEARANCE;
         updatePosition(EXTRA_CLEARANCE, heading);
         m.stop();
@@ -159,8 +186,8 @@ namespace Nav {
         lateralComp += (goLeft? lateral : -lateral);
         std::cout << "[避障] 累计侧向补偿: " << lateralComp << " cm\n";
 
-        if (goLeft) { turnRight(m,s,y,90); heading = std::fmod(heading - 90 + 360.0f, 360.0f); }
-        else        { turnLeft(m, s, y, 90); heading = std::fmod(heading + 90 + 360.0f, 360.0f); }
+        if (goLeft) { Nav::turnRight(m,s,y,90); heading = std::fmod(heading - 90 + 360.0f, 360.0f); }
+        else        { Nav::turnLeft(m, s, y, 90); heading = std::fmod(heading + 90 + 360.0f, 360.0f); }
 
         remaining = pending;
         std::cout << "[避障] 恢复剩余前进: " << remaining << " cm\n";
