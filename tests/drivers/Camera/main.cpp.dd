@@ -1,13 +1,73 @@
-#include <opencv2/opencv.hpp>
+#include "face.h"
 #include <iostream>
+#include <string>
+
+void printMenu() {
+    std::cout << "\n===== 人脸识别系统 =====\n";
+    std::cout << "1. 训练人脸识别模型\n";
+    std::cout << "2. 启动摄像头进行人脸识别\n";
+    std::cout << "3. 拍照并进行人脸识别\n";
+    std::cout << "0. 退出\n";
+    std::cout << "请选择操作: ";
+}
 
 int main() {
-    cv::Mat image = cv::imread("test.jpg");
-    if (image.empty()) {
-        std::cerr << "无法加载图像！请确认 test.jpg 是否存在于当前目录。" << std::endl;
-        return -1;
+    FaceRecognitionSystem faceSystem;
+    bool isRaspberryPi = true;  // 设置为 true 表示在树莓派上运行，false 表示使用普通摄像头
+    
+    // 尝试加载或训练模型
+    if (!faceSystem.loadOrTrainModel()) {
+        std::cout << "模型加载失败，请确保训练数据存在或模型已保存\n";
     }
-    cv::imshow("Test Image", image);
-    cv::waitKey(0);
+    
+    int choice = -1;
+    while (choice != 0) {
+        printMenu();
+        std::cin >> choice;
+        
+        switch (choice) {
+            case 1: {
+                // 训练模型
+                faceSystem.trainModel();
+                break;
+            }
+            case 2: {
+                // 使用摄像头识别
+                std::cout << "启动摄像头识别...\n";
+                std::cout << "按ESC键退出\n";
+                faceSystem.recognizeFromCamera(isRaspberryPi);
+                break;
+            }
+            case 3: {
+                // 拍照并识别
+                std::cout << "拍照并识别人脸...\n";
+                auto results = faceSystem.recognizeFromCapture(isRaspberryPi);
+                
+                if (results.empty()) {
+                    std::cout << "未检测到人脸\n";
+                } else {
+                    for (const auto& result : results) {
+                        int label = result.first;
+                        double confidence = result.second;
+                        bool recognized = confidence < 70.0; // 使用与类中相同的阈值
+                        
+                        if (recognized) {
+                            std::cout << "识别结果: " << faceSystem.getLabelName(label) 
+                                      << " (可信度: " << (100 - confidence) << "%)\n";
+                        } else {
+                            std::cout << "未能识别人脸 (可信度: " << (100 - confidence) << "%)\n";
+                        }
+                    }
+                }
+                break;
+            }
+            case 0:
+                std::cout << "退出程序\n";
+                break;
+            default:
+                std::cout << "无效选择，请重试\n";
+        }
+    }
+    
     return 0;
 }
