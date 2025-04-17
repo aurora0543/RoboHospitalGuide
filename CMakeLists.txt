@@ -34,6 +34,14 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/main.cpp"
 )
 
+# 过滤掉包含 RobotGUI 的文件
+set(FILTERED_SRC_FILES "")
+foreach(file ${SRC_FILES})
+    if (NOT file MATCHES ".*/RobotGUI/.*")
+        list(APPEND FILTERED_SRC_FILES ${file})
+    endif()
+endforeach()
+set(SRC_FILES ${FILTERED_SRC_FILES})
 
 
 # 构建可执行文件
