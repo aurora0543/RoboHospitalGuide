@@ -27,28 +27,28 @@ void startMainThread() {
 
     FaceRecognizerLib recognizer;
     if (!recognizer.init(face_folder)) {
-        std::cerr << "[DEBUG] 人脸识别初始化失败\n";
+        std::cerr << "[DEBUG] Failed to initialize face recognition.\n";
     }
 
     while (true) {
         std::string command;
-        std::cout << "请输入指令（如 nav 开始导航，facedetection 人脸识别）: ";
+        std::cout << "Enter a command (nav, facedetection, help, list, voice, translate): ";
         std::cin >> command;
 
         if (command == "facedetection") {
             std::string result = recognizer.recognize(capture_path);
-            std::cout << "识别结果：" << result << std::endl;
+            std::cout << "Face recognition result: " << result << std::endl;
         }
         else if (command == "nav") {
             std::string department;
-            std::cout << "请输入目标科室名称: ";
+            std::cout << "Enter destination department: ";
             std::cin.ignore();
             std::getline(std::cin, department);
 
             nlohmann::json navJson;
             std::ifstream navFile("../config/nav.json");
             if (!navFile.is_open()) {
-                std::cerr << "[DEBUG] 无法打开导航配置文件\n";
+                std::cerr << "[DEBUG] Failed to open navigation config file.\n";
                 continue;
             }
 
@@ -57,7 +57,7 @@ void startMainThread() {
                 navFile.close();
 
                 if (!navJson.contains(department)) {
-                    std::cerr << "[DEBUG] 找不到目标科室: " << department << "\n";
+                    std::cerr << "[DEBUG] Department not found: " << department << "\n";
                     continue;
                 }
 
@@ -78,11 +78,28 @@ void startMainThread() {
                 }).detach();
 
             } catch (const std::exception& e) {
-                std::cerr << "[DEBUG] 导航启动失败: " << e.what() << "\n";
+                std::cerr << "[DEBUG] Navigation startup error: " << e.what() << "\n";
                 continue;
             }
-        } else {
-            std::cout << "[DEBUG] 未知指令: " << command << std::endl;
+        }
+        else if (command == "help") {
+            std::cout << "[INFO] Available commands: nav, facedetection, help, list, voice, translate\n";
+        }
+        else if (command == "list") {
+            std::cout << "[INFO] List feature not implemented yet.\n";
+        }
+        else if (command == "voice") {
+            std::cout << "[INFO] Voice recognition feature not implemented yet.\n";
+        }
+        else if (command == "translate") {
+            std::cout << "[INFO] Translation feature not implemented yet.\n";
+        }
+        else if (command == "quit") {
+            std::cout << "[INFO] Quitting system..." << std::endl;
+            break;
+        }
+        else {
+            std::cout << "[DEBUG] Unknown command: " << command << std::endl;
         }
     }
 }
