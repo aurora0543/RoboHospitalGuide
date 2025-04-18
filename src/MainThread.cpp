@@ -13,7 +13,7 @@
 #include <memory>
 #include <cstdlib>
 
-void playAudio(const std::string& path) {
+void playAudio2(const std::string& path) {
     std::string cmd = "mplayer -volume 100 " + path + " >/dev/null 2>&1";
     system(cmd.c_str());
 }
@@ -67,14 +67,14 @@ void startMainThread() {
                 auto yaw   = std::make_shared<YawTracker>();
 
                 std::thread([motor, servo, yaw, department, navJson, audio_start, audio_stop]() {
-                    playAudio(audio_start);
+                    playAudio2(audio_start);
                     Nav::startNavigation.store(true);
                     Nav::pauseNavigation.store(false);
                     Nav::navCV.notify_all();
 
                     Nav::navigationThread(motor.get(), servo.get(), yaw.get(), department, navJson);
 
-                    playAudio(audio_stop);
+                    playAudio2(audio_stop);
                 }).detach();
 
             } catch (const std::exception& e) {

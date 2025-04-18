@@ -13,11 +13,14 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
+
+
 # 查找依赖库
 find_library(GPIOD_LIB gpiod REQUIRED)
 # 查找 OpenCV
 find_package(OpenCV REQUIRED)
-
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg SvgWidgets Sql Xml Network)
+add_subdirectory(RobotGUI)
 
 # 包含头文件路径
 include_directories(
@@ -34,20 +37,21 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/main.cpp"
 )
 
-# 过滤掉包含 RobotGUI 的文件
-set(FILTERED_SRC_FILES "")
-foreach(file ${SRC_FILES})
-    if (NOT file MATCHES ".*/RobotGUI/.*")
-        list(APPEND FILTERED_SRC_FILES ${file})
-    endif()
-endforeach()
-set(SRC_FILES ${FILTERED_SRC_FILES})
-
-
 # 构建可执行文件
 add_executable(RoboHospitalGuide ${SRC_FILES})
 
-target_include_directories(RoboHospitalGuide PRIVATE ${CONFIG_DIR})
+target_include_directories(RoboHospitalGuide PRIVATE ${CONFIG_DIR} ${CMAKE_SOURCE_DIR}/RobotGUI)
 
 # 链接库
-target_link_libraries(RoboHospitalGuide ${GPIOD_LIB} ${OpenCV_LIBS})
+target_link_libraries(RoboHospitalGuide
+    ${GPIOD_LIB}
+    ${OpenCV_LIBS}
+    RobotGUI
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::Svg
+    Qt6::SvgWidgets
+    Qt6::Sql
+    Qt6::Xml
+    Qt6::Network
+)
