@@ -160,8 +160,10 @@ make -j4
 MIT License (or your preferred license)
 
 ## 👨‍💻 Contributors
-- You (Lead developer)
-- [Add team names if any]
+- [aurora0543](https://github.com/aurora0543)
+- [EricZJ](https://github.com/323417)
+- [zz117zz](https://github.com/zz117zz)
+- [Wswwhcs4](https://github.com/Wswwhcs4) 
 
 ---
 Feel free to open issues or submit pull requests for improvements!
