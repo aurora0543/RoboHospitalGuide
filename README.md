@@ -8,8 +8,8 @@
 This project is a smart hospital guide robot developed using Raspberry Pi. It aims to improve the efficiency of hospital services by helping patients navigate to the correct department based on their registration information. The robot features facial recognition, autonomous navigation, and obstacle avoidance to enhance the hospital experience.  
 
 ## **Key Features**  
-- **Patient Identification**: Uses a camera to recognize patients and match them with the hospital database.  
-- **Autonomous Navigation**: Calculates the optimal path to guide patients to their assigned department.  
+- **Patient Identification**: Facial recognition through the camera to match patient information in the hospital database.  
+- **Autonomous Navigation**: Guide patients to the corresponding department based on their registration information according to the map.   
 - **Obstacle Avoidance**: Uses ultrasonic sensors to detect and avoid obstacles.  
 - **Intelligent Steering**: Utilizes a gyroscope to ensure stable movement.  
 - **Voice Interaction (Future Update)**: Provides voice guidance for a better user experience.  
@@ -56,8 +56,7 @@ build/
 
 ## **Future Updates**  
 | Version | Planned Features |  
-|---------|-----------------|  
-| v1.0    | Basic facial recognition, path planning, obstacle avoidance |  
+|---------|-----------------|   
 | v1.1    | Voice guidance, basic voice interaction |  
 | v1.2    | Remote control (allow doctors to manually adjust navigation) |  
 | v2.0    | AI-enhanced navigation, cloud-based data interaction |  
