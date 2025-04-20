@@ -11,9 +11,10 @@
 #include "json.hpp"
 
 void playAudio(const std::string& path) {
-    std::string cmd = "mplayer -volume 100 " + path + " >/dev/null 2>&1";
+    std::string cmd = "mplayer -ao alsa:device=hw=1.0 -volume 100 \"" + path + "\" > /dev/null 2>&1";
     system(cmd.c_str());
 }
+
 
 MainController::MainController() : recognizer(std::make_shared<FaceRecognizerLib>()) {}
 
@@ -33,8 +34,8 @@ bool MainController::init() {
 }
 
 QString MainController::recognizeFace() {
-    std::string result = recognizer->recognize("../source/tmp/capture.jpg");
-    return QString::fromStdString(result);
+    // std::string result = recognizer->recognize("../source/tmp/capture.jpg");
+    // return QString::fromStdString(result);
 }
 
 void MainController::startNavigationTo(const QString& departmentName) {

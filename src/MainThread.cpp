@@ -37,8 +37,8 @@ void startMainThread() {
         std::cin >> command;
 
         if (command == "facedetection") {
-            std::string result = recognizer.recognize(capture_path);
-            std::cout << "Face recognition result: " << result << std::endl;
+            // std::string result = recognizer.recognize(capture_path);
+            // std::cout << "Face recognition result: " << result << std::endl;
         }
         else if (command == "nav") {
             std::string department;

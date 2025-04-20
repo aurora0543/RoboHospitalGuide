@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 set(CONFIG_DIR ${CMAKE_SOURCE_DIR}/config)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -19,7 +23,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 find_library(GPIOD_LIB gpiod REQUIRED)
 # 查找 OpenCV
 find_package(OpenCV REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg SvgWidgets Sql Xml Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg SvgWidgets Sql Xml Network Multimedia MultimediaWidgets)
 add_subdirectory(RobotGUI)
 
 # 包含头文件路径
@@ -54,4 +58,6 @@ target_link_libraries(RoboHospitalGuide
     Qt6::Sql
     Qt6::Xml
     Qt6::Network
+    Qt6::Multimedia
+    Qt6::MultimediaWidgets
 )

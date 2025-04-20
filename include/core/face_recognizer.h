@@ -13,7 +13,7 @@ public:
     bool init(const std::string& face_folder);
 
     // 识别给定图片中的人脸，返回最相似的人脸图片名
-    std::string recognize(const std::string& capture_image_path);
+    std::pair<std::string, double> recognize(const std::string& capture_image_path);
 
 private:
     cv::CascadeClassifier face_cascade;
