@@ -17,15 +17,15 @@ void checkPause(Motor& motor) {
     std::unique_lock<std::mutex> lock(navMutex);
     while (pauseNavigation.load()) {
         motor.stop();
-        std::cout << "⏸️ 电机停止，导航已挂起...\n";
+        std::cout << "Motor stopped, navigation is paused...\n";
         navCV.wait(lock);
-        std::cout << "▶️ 导航已恢复，继续执行...\n";
+        std::cout << "Navigation resumed, continuing...\n";
         motor.forward(30);
     }
 }
 
 void moveForward(Motor& motor, int duration_ms) {
-    std::cout << "⬆️  前进 " << duration_ms << " 毫秒...\n";
+    std::cout << "Moving forward for " << duration_ms << " ms...\n";
     motor.forward(40);
     int elapsed = 0;
     while (elapsed < duration_ms) {
@@ -34,7 +34,7 @@ void moveForward(Motor& motor, int duration_ms) {
         elapsed += 100;
     }
     motor.stop();
-    std::cout << "🛑 前进结束\n";
+    std::cout << "Finished moving forward\n";
 }
 
 void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
@@ -43,7 +43,7 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     yaw.start(50);
     float startAngle = yaw.getAngle();
     
-    std::cout << "↪️ 左转 " << angle << " 度...\n";
+    std::cout << "Turning left " << angle << " degrees...\n";
     motor.forward(40);
     while (true) {
         checkPause(motor);
@@ -55,11 +55,9 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     }
     
     motor.stop();
-    std::cout << "✅ 左转完成\n";
+    std::cout << "Left turn completed\n";
     servo.center();
 }
-
-
 
 void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     servo.turn('R', 45);
@@ -67,7 +65,7 @@ void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     yaw.start(40);
     float startAngle = yaw.getAngle();
     
-    std::cout << "↩️ 右转 " << angle << " 度...\n";
+    std::cout << "Turning right " << angle << " degrees...\n";
     motor.forward(50);
     while (true) {
         checkPause(motor);
@@ -79,32 +77,30 @@ void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     }
     
     motor.stop();
-    std::cout << "✅ 右转完成\n";
+    std::cout << "Right turn completed\n";
     servo.center();
 }
-
-
 
 void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::string& target, nlohmann::json navJson) {
     Motor& m = *motor;
     Servo& s = *servo;
     YawTracker& y = *yaw;
 
-    std::cout << "\n🚦 开始导航 → 目标科室: " << target << "\n";
+    std::cout << "\n Starting navigation → Target department: " << target << "\n";
 
     if (!navJson.contains(target)) {
-        std::cerr << "❌ 未找到目标科室 \"" << target << "\" 的导航路径\n";
+        std::cerr << "Navigation path not found for department \"" << target << "\"\n";
         return;
     }
 
     if (!navJson[target].contains("path") || !navJson[target]["path"].is_array()) {
-        std::cerr << "❌ \"" << target << "\" 的导航数据无效或缺少 path\n";
+        std::cerr << "Invalid or missing navigation data (\"path\") for \"" << target << "\"\n";
         return;
     }
 
     for (const auto& step : navJson[target]["path"]) {
         if (!step.contains("action") || !step.contains("value")) {
-            std::cerr << "❌ 导航步骤格式错误，缺少 action 或 value\n";
+            std::cerr << "Malformed navigation step: missing 'action' or 'value'\n";
             continue;
         }
         std::string action = step["action"];
@@ -117,11 +113,11 @@ void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::st
         } else if (action == "turnRight") {
             turnRight(m, s, y, value);
         } else {
-            std::cerr << "❌ 未知导航动作: " << action << "\n";
+            std::cerr << "Unknown navigation action: " << action << "\n";
         }
     }
 
-    std::cout << "🏁 导航完成！\n";
+    std::cout << "Navigation completed!\n";
 }
 
 }  // namespace Nav

@@ -2,11 +2,11 @@
 #include <chrono>
 #include "MadgwickAHRS.h"
 
-// 全局实例（或作为成员变量）
+// Global instance (or use as a member variable)
 Madgwick madgwick;
 
 void YawTracker::start(int hz) {
-    madgwick.begin(hz);  // 初始化采样频率
+    madgwick.begin(hz);  // Initialize sample rate
     mpu.registerCallback([this](uint64_t ts, const float* acc, const float* gyro) {
         this->handleMPUData(ts, acc, gyro);
     });
@@ -15,15 +15,14 @@ void YawTracker::start(int hz) {
 
 void YawTracker::handleMPUData(uint64_t, const float* acc, const float* gyro) {
     madgwick.updateIMU(
-        gyro[0], gyro[1], gyro[2],  // 单位：°/s
-        acc[0], acc[1], acc[2]      // 单位：g
+        gyro[0], gyro[1], gyro[2],  // Units: degrees per second
+        acc[0], acc[1], acc[2]      // Units: g (gravitational acceleration)
     );
 }
 
 float YawTracker::getAngle() const {
-    return madgwick.getYaw(); // 获取融合后的 yaw（单位：°）
+    return madgwick.getYaw(); // Return fused yaw angle (in degrees)
 }
 
 void YawTracker::reset() {
-    // MadgwickAHRS 通常不带 reset，这里你可以重建对象或忽略
 }

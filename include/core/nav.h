@@ -7,31 +7,31 @@
 #include <thread>
 #include "motor.h"
 #include "servo.h"
-//#include "servonew.h" // 替换原来的 "servo.h"
+//#include "servonew.h" // Alternative to "servo.h"
 #include "yaw_tracker.h"
-#include "json.hpp"  // nlohmann::json 的头文件
+#include "json.hpp"  // Header for nlohmann::json
 
 namespace Nav {
 
-// 全局控制标志与同步机制
+// Global control flags and synchronization primitives
 extern std::atomic<bool> startNavigation;
 extern std::atomic<bool> pauseNavigation;
 extern std::mutex navMutex;
 extern std::condition_variable navCV;
 
-// 暂停检查函数，暂停时停止电机运行
+// Checks if navigation is paused; stops motor while paused
 void checkPause(Motor& motor);
 
-// 前进函数，参数 duration_ms 为前进时长（毫秒）
+// Moves forward for the specified duration in milliseconds
 void moveForward(Motor& motor, int duration_ms);
 
-// 左转函数，参数 angle 为转动角度（度）
+// Turns left by a specified angle in degrees
 void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle);
 
-// 右转函数，参数 angle 为转动角度（度）
+// Turns right by a specified angle in degrees
 void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle);
 
-// 导航线程函数：轮询控制标志完成一次导航动作（前进、左转、前进、右转）
+// Main navigation thread function: executes navigation steps (e.g. forward, turn left/right)
 void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::string& target, nlohmann::json navJson);
 
 }  // namespace Nav

@@ -8,32 +8,33 @@
 #include <string>
 
 /**
- * @brief HC‑SR04 超声波传感器封装，自动在后台测距并通过回调报告
+ * @brief HC-SR04 Ultrasonic Sensor wrapper that runs distance measurement in the background
+ *        and reports results via a callback function.
  */
 class UltrasonicSensor {
 public:
     using Callback = std::function<void(float)>;
 
     /**
-     * @param chip_name GPIO chip 名称（如 "gpiochip0"）
-     * @param trig_pin  触发引脚号（BCM 编号）
-     * @param echo_pin  回波引脚号（BCM 编号）
-     * @param callback  每次测量完成后调用，参数为测得的距离（cm）
+     * @param chip_name GPIO chip name (e.g., "gpiochip0")
+     * @param trig_pin  BCM pin number for the trigger pin
+     * @param echo_pin  BCM pin number for the echo pin
+     * @param callback  Called after each measurement; argument is the measured distance in cm
      */
     UltrasonicSensor(const std::string& chip_name,
                      int trig_pin,
                      int echo_pin,
                      Callback callback);
 
-    /// 停止测距并释放资源
+    /// Stops measurement and releases resources
     ~UltrasonicSensor();
 
-    // 禁止拷贝
+    // Disable copy operations
     UltrasonicSensor(const UltrasonicSensor&) = delete;
     UltrasonicSensor& operator=(const UltrasonicSensor&) = delete;
 
 private:
-    void measureDistance();  ///< 后台线程执行的测距循环
+    void measureDistance();  ///< Background loop that performs distance measurement
 
     std::unique_ptr<gpiod::chip> chip;
     gpiod::line              trig_line;
@@ -43,8 +44,7 @@ private:
     std::thread       sensor_thread;
     Callback          callback;
 
-
-    // 超声波传感器硬件接口定义
+    // Hardware pin definitions for multiple ultrasonic sensors
     #define TRIG_FRONT 24
     #define ECHO_FRONT 25
     #define TRIG_LEFT  19
@@ -55,8 +55,4 @@ private:
     #define ECHO_REAR   4
 };
 
-
-
-
 #endif // ULTRASONIC_SENSOR_H
-

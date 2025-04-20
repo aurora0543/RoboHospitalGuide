@@ -3,7 +3,7 @@
 #include "nav.h"
 #include "motor.h"
 #include "servo.h"
-//#include "servonew.h" // 替换原来的 "servo.h"
+//#include "servonew.h"
 #include "yaw_tracker.h"
 #include <fstream>
 #include <thread>
@@ -36,6 +36,7 @@ bool MainController::init() {
 QString MainController::recognizeFace() {
     // std::string result = recognizer->recognize("../source/tmp/capture.jpg");
     // return QString::fromStdString(result);
+    return QString("None"); // Placeholder for actual recognition
 }
 
 void MainController::startNavigationTo(const QString& departmentName) {

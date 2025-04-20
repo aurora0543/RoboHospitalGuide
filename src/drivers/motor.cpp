@@ -17,7 +17,7 @@ Motor::Motor(const MotorPins& pins)
       pins(pins)
 {
     chip = gpiod_chip_open_by_name("gpiochip0");
-    if (!chip) throw std::runtime_error("无法打开 GPIO 芯片");
+    if (!chip) throw std::runtime_error("Unable to open GPIO chip");
 
     line_AIN1 = gpiod_chip_get_line(chip, pins.AIN1);
     line_AIN2 = gpiod_chip_get_line(chip, pins.AIN2);
@@ -25,7 +25,7 @@ Motor::Motor(const MotorPins& pins)
     line_BIN2 = gpiod_chip_get_line(chip, pins.BIN2);
 
     if (!line_AIN1 || !line_AIN2 || !line_BIN1 || !line_BIN2)
-        throw std::runtime_error("无法获取电机控制GPIO线");
+        throw std::runtime_error("Unable to get motor control GPIO lines");
 
     gpiod_line_request_output(line_AIN1, "motor", 0);
     gpiod_line_request_output(line_AIN2, "motor", 0);
@@ -63,7 +63,7 @@ void Motor::cleanup() {
 
 void Motor::forward(int dutyCycle) {
     if (dutyCycle < 0 || dutyCycle > 100)
-        throw std::runtime_error("占空比必须在 0-100之间");
+        throw std::runtime_error("dutyCycle must be between 0 and 100");
     left_direction.store(true);
     right_direction.store(false);
     left_duty.store(dutyCycle);
@@ -72,7 +72,7 @@ void Motor::forward(int dutyCycle) {
 
 void Motor::backward(int dutyCycle) {
     if (dutyCycle < 0 || dutyCycle > 100)
-        throw std::runtime_error("占空比必须在 0-100之间");
+        throw std::runtime_error("dutyCycle must be between 0 and 100");
     left_direction.store(false);
     right_direction.store(true);
     left_duty.store(dutyCycle);
