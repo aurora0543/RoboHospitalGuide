@@ -26,7 +26,7 @@ void checkPause(Motor& motor) {
 
 void moveForward(Motor& motor, int duration_ms) {
     std::cout << "⬆️  前进 " << duration_ms << " 毫秒...\n";
-    motor.forward(30);
+    motor.forward(40);
     int elapsed = 0;
     while (elapsed < duration_ms) {
         checkPause(motor);
@@ -44,7 +44,7 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     float startAngle = yaw.getAngle();
     
     std::cout << "↪️ 左转 " << angle << " 度...\n";
-    motor.forward(30);
+    motor.forward(40);
     while (true) {
         checkPause(motor);
         float currentAngle = yaw.getAngle();
@@ -59,14 +59,16 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     servo.center();
 }
 
+
+
 void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     servo.turn('R', 45);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    yaw.start(50);
+    yaw.start(40);
     float startAngle = yaw.getAngle();
     
     std::cout << "↩️ 右转 " << angle << " 度...\n";
-    motor.forward(30);
+    motor.forward(50);
     while (true) {
         checkPause(motor);
         float currentAngle = yaw.getAngle();
@@ -80,6 +82,8 @@ void turnRight(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     std::cout << "✅ 右转完成\n";
     servo.center();
 }
+
+
 
 void navigationThread(Motor* motor, Servo* servo, YawTracker* yaw, const std::string& target, nlohmann::json navJson) {
     Motor& m = *motor;

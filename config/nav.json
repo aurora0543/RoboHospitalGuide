@@ -1,7 +1,8 @@
 {
     "Diagnostic & Support": {
       "path": [
-        { "action": "moveForward", "value": 1000 }
+        { "action": "moveForward", "value": 1000 },
+        { "action":"turnLeft", "value": 30}
       ]
     },
     "Emergency Room": {

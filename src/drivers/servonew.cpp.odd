@@ -1,0 +1,60 @@
+#include "servonew.h"
+#include <iostream>
+#include <unistd.h>
+#include <stdexcept>
+#include <cmath>
+
+#define SERVO_FREQUENCY 50 // 50Hz -> 20ms
+#define CENTER_DUTY_US 1500
+#define LEFT_MIN_DUTY_US 600
+#define RIGHT_MAX_DUTY_US 2400
+#define MAX_ANGLE 90
+
+ServoNew::ServoNew(int pwm_channel, int chip)
+    : channel(pwm_channel), pwm_chip(chip)
+{
+    if (pwm.start(channel, SERVO_FREQUENCY, 0.0, chip) < 0) {
+        throw std::runtime_error("无法启动PWM，检查是否配置了 dtoverlay=pwm-2chan");
+    }
+    std::cout << "PWM Servo initialized on PWM channel " << channel << std::endl;
+    center();
+}
+
+ServoNew::~ServoNew() {
+    pwm.stop();
+    std::cout << "PWM Servo cleaned up." << std::endl;
+}
+
+void ServoNew::center() {
+    setDuty(CENTER_DUTY_US);
+    std::cout << "舵机居中：" << CENTER_DUTY_US << "us" << std::endl;
+    usleep(500000);
+}
+
+void ServoNew::turn(char direction, int angle) {
+    if (angle < 0) angle = 0;
+    if (angle > MAX_ANGLE) angle = MAX_ANGLE;
+
+    float ratio = static_cast<float>(angle) / MAX_ANGLE;
+    int target_duty;
+
+    if (direction == 'L' || direction == 'l') {
+        target_duty = static_cast<int>(CENTER_DUTY_US - ratio * (CENTER_DUTY_US - LEFT_MIN_DUTY_US) + 0.5f);
+    } else if (direction == 'R' || direction == 'r') {
+        target_duty = static_cast<int>(CENTER_DUTY_US + ratio * (RIGHT_MAX_DUTY_US - CENTER_DUTY_US) + 0.5f);
+    } else {
+        std::cout << "方向无效，请使用 'L' 或 'R'" << std::endl;
+        return;
+    }
+
+    setDuty(target_duty);
+    std::cout << "舵机转向 " << (direction == 'L' ? "左" : "右")
+              << " 角度 " << angle << "°，PWM占空时间 " << target_duty << "us" << std::endl;
+
+    usleep(500000);
+}
+
+void ServoNew::setDuty(int duty_us) {
+    float duty_percent = (static_cast<float>(duty_us) / 20000.0f) * 100.0f;
+    pwm.setDutyCycle(duty_percent);
+}

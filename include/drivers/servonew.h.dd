@@ -1,0 +1,22 @@
+#ifndef SERVO_NEW_H
+#define SERVO_NEW_H
+
+#include "rpi_pwm.h"
+
+class ServoNew {
+public:
+    ServoNew(int pwm_channel, int chip = 0);
+    ~ServoNew();
+
+    void center();
+    void turn(char direction, int angle);
+
+private:
+    void setDuty(int duty_us);
+
+    RPI_PWM pwm;
+    int channel;
+    int pwm_chip;
+};
+
+#endif // SERVO_NEW_H
