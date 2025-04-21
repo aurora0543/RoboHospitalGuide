@@ -2,7 +2,7 @@
 
 When the user clicks on the interface of the guiding robot, they can match the user with the corresponding patient data in the database through 1. facial recognition and 2. inputting information such as name, date of birth, gender, etc.
 
-![body](image/facial recognition.jpg)
+![body](image/facialrecognition.jpg)
 
 If a match is found with the patient data in the database, the corresponding department for consultation will be displayed and the navigation function will guide the user to enter the corresponding department automatically. If no match is found, the user clicks on the navigation button. According to the map displayed on the interface, they select the corresponding location and click "Start Navigation" to start the guiding robot. 
 
