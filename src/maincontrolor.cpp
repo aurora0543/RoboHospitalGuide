@@ -11,12 +11,14 @@
 #include "json.hpp"
 
 void playAudio(const std::string& path) {
-    std::string cmd = "mplayer -ao alsa:device=hw=1.0 -volume 100 \"" + path + "\" > /dev/null 2>&1";
+    std::string cmd = "mplayer -volume 100 \"" + path + "\" > /dev/null 2>&1";
     system(cmd.c_str());
 }
 
 
-MainController::MainController() : recognizer(std::make_shared<FaceRecognizerLib>()) {}
+MainController::MainController() : 
+motor(MotorPins{17, 16, 22, 23}), 
+recognizer(std::make_shared<FaceRecognizerLib>()) {}
 
 bool MainController::init() {
 
@@ -74,4 +76,11 @@ void MainController::startNavigationTo(const QString& departmentName) {
 
         playAudio(audio_stop);
     }).detach();
+}
+
+
+void MainController::exitSystem() {
+    //std::string audio_exit = "../source/exits.mp3";
+    //playAudio(audio_exit);
+    motor.stop();
 }

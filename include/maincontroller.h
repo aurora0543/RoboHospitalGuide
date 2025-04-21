@@ -7,6 +7,7 @@
 #include <string>
 #include "face_recognizer.h"
 #include "json.hpp"
+#include "motor.h"
 
 void playAudio(const std::string& path);
 
@@ -17,10 +18,10 @@ public:
 
     QString recognizeFace();
     void startNavigationTo(const QString& department);
+    void exitSystem();
 
 private:
     std::shared_ptr<FaceRecognizerLib> recognizer;
     nlohmann::json navJson;
-    
-    
+    Motor motor;
 };  
