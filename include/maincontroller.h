@@ -17,6 +17,7 @@ public:
 
     QString recognizeFace();
     void startNavigationTo(const QString& department);
+    void exitSystem();
 
 private:
     std::shared_ptr<FaceRecognizerLib> recognizer;

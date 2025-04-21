@@ -5,7 +5,7 @@
 namespace Record {
 
 bool recordToWav(const std::string& outputPath, int durationSec) {
-    // 使用 arecord 命令录制 WAV 文件，采样率 16000Hz, 单声道, 16 位深度
+    // Check if the output path is valid
     std::string command = "arecord -f cd -t wav -d " + std::to_string(durationSec) + " -r 16000 -c 1 " + outputPath;
     std::cout << "[INFO] Recording audio to: " << outputPath << " for " << durationSec << " seconds..." << std::endl;
 

@@ -63,7 +63,7 @@ void Motor::cleanup() {
 
 void Motor::forward(int dutyCycle) {
     if (dutyCycle < 0 || dutyCycle > 100)
-        throw std::runtime_error("占空比必须在 0-100之间");
+        throw std::runtime_error("the duty cycle must be between 0-100");
     left_direction.store(true);
     right_direction.store(false);
     left_duty.store(dutyCycle);
@@ -72,7 +72,7 @@ void Motor::forward(int dutyCycle) {
 
 void Motor::backward(int dutyCycle) {
     if (dutyCycle < 0 || dutyCycle > 100)
-        throw std::runtime_error("占空比必须在 0-100之间");
+        throw std::runtime_error("the duty cycle must be between 0-100");
     left_direction.store(false);
     right_direction.store(true);
     left_duty.store(dutyCycle);

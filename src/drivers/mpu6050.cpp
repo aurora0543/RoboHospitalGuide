@@ -8,7 +8,6 @@
 #include <iostream>
 #include <stdexcept>
 
-// 寄存器定义
 #define SMPLRT_DIV    0x19
 #define CONFIG        0x1A
 #define GYRO_CONFIG   0x1B
@@ -19,12 +18,12 @@
 
 MPU6050::MPU6050(const char* i2c_device, uint8_t address) 
     : running(false) {
-    // 打开I2C设备
+    // open the IIC
     if((file = open(i2c_device, O_RDWR)) < 0) {
         throw std::runtime_error("Failed to open I2C device");
     }
     
-    // 设置从设备地址
+    // set the I2C address
     if(ioctl(file, I2C_SLAVE, address) < 0) {
         close(file);
         throw std::runtime_error("Failed to set I2C address");
