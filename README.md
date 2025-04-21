@@ -15,9 +15,13 @@ The robot navigates patients to their assigned departments using face recognitio
 
 ### 🧾 Development Diary
 
-We documented the development process through short videos and updates on Douyin (TikTok China).  
+We documented the development process through short videos and updates on Douyin (TikTok China).
 
-📹 Follow our journey here: [@baron0543](https://www.douyin.com/user/baron0543)
+📹 Follow our journey on Douyin: **@baron0543**
+
+You can scan the QR code below using the Douyin app to view our profile:
+
+![Douyin QR Code](./image/douyin.jpeg)
 
 The videos include:
 
