@@ -6,6 +6,8 @@
 
 [Process Identification](ProcessIdentification.md)
 
+[Develop log](Develop_log.md)
+
 ## 🩺 Project Overview
 RoboHospitalGuide is an intelligent hospital guide robot system developed on Raspberry Pi 5B. This system is designed to enhance the hospital experience by offering autonomous navigation, facial recognition, and patient guidance services. Integrated with a graphical user interface (GUI) and real-time hardware control, this project showcases a modular and scalable architecture suitable for real-world hospital deployments.
 
