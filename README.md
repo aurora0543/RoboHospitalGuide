@@ -21,7 +21,9 @@ We documented the development process through short videos and updates on Douyin
 
 You can scan the QR code below using the Douyin app to view our profile:
 
-![Douyin QR Code](./image/douyin.JPG)
+<p align="center">
+  <img src="image/douyin.JPG" alt="Douyin QR Code" width="250"/>
+</p>
 
 The videos include:
 
