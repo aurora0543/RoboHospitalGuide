@@ -143,15 +143,31 @@ build/              # Build output folder (ignored in repo)
 git clone https://github.com/aurora0543/RoboHospitalGuide.git
 cd RoboHospitalGuide
 git clone https://github.com/aurora0543/RobotGUI.git
+
+# or you can use --recurse-submodules to clone the submodules 
+
 git clone 
 mkdir build && cd build
 cmake ..
 make -j4
 ```
 
+### Configuration Notes
+- Face Recognition Path Configuration:
+Please note that the face recognition model path in the code is currently set using an absolute path. You will need to modify the path based on your local file system in order for the face detection to work properly.
+Example:
+
+```c++
+std::string modelPath = "/home/user/project/models/haarcascade_frontalface_default.xml";
+```
+
+- Update this path to match your actual directory structure.
+- Make sure the required model files (e.g., OpenCV Haar Cascade) are correctly downloaded and placed in an accessible folder.
+- If you move the project to a different machine or directory, this configuration must be updated accordingly.
+
 ### Running
 ```bash
-./RoboHospitalGuide -platform xcb   # Or eglfs for embedded devices
+sudo ./RoboHospitalGuide
 ```
 
 ## 🧩 Future Roadmap
@@ -159,7 +175,7 @@ make -j4
 |---------|------------------|
 | v1.1 | Voice guidance, basic voice interaction |
 | v1.2 | Remote control panel for doctor override |
-| v2.0 | AI-enhanced path planning, cloud database integration |
+| v2.0 | path planning, database integration |
 | v2.1 | Patient queue management, multilingual support |
 
 ## 📜 License

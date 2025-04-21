@@ -1,6 +1,3 @@
-[submodule "web/crow"]
-	path = web/crow
-	url = https://github.com/CrowCpp/Crow.git
 [submodule "RobotGUI"]
 	path = RobotGUI
 	url = https://github.com/aurora0543/RobotGUI.git
