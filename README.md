@@ -93,6 +93,30 @@ The robot navigates patients to their assigned departments using face recognitio
 sudo apt install libopencv-dev libopencv-core-dev
 ```
 
+### ✅ Database Setup
+1.	Install MySQL or MariaDB (if not already installed).
+2.	Create the Database
+You can find SQL setup files in the config/ directory. Run the following SQL files in order to create the necessary database and tables:
+```bash
+mysql -u root -p < config/init_database.sql
+mysql -u root -p < config/create_tables.sql
+```
+(Adjust file names according to what’s in your config/ folder.)
+
+3.	Create a Database User
+Run the following SQL command (or use the provided SQL script):
+
+CREATE USER 'remoter_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON your_database_name.* TO 'remoter_user'@'localhost';
+FLUSH PRIVILEGES;
+
+
+4.	Configure Database Connection
+Make sure your application’s config file (e.g. .env or config/db_config.h) is properly set to use:
+	•	User: remoter_user
+	•	Password: your_password
+	•	Database: your_database_name
+
 ### ✅ Install libgpiod
 ```bash
 sudo apt install libgpiod-dev gpiod
@@ -104,27 +128,35 @@ sudo raspi-config
 # Enable Interface Options > I2C, SPI
 ```
 
+### ✅ Testing
+
+We have provided test programs for various hardware modules to ensure each component functions correctly before integration. You can find these test files in the tests/ or modules/test/ directory.
+
+The following modules are covered:
+-	Motor Control – Test forward, backward, and turning operations
+-	Servo (PWM) Control – Verify angle positioning for servos
+-	Ultrasonic Sensor – Measure distance and verify sensor readings
+-	Gyroscope / IMU – Read orientation or acceleration data
+-	Web Module – Test basic communication and remote control interface
+
+To run a test, navigate to the corresponding folder and compile or execute the test file. Detailed instructions can be found in comments within each test source file.
+
 ## 🗂️ Project Structure
 ```
 include/            # C++ headers
 ├── core/           # Core logic (face recognition, navigation)
 ├── drivers/        # Hardware abstraction
-│   └── hal/        # HAL (e.g., GPIO, motor, MPU)
-├── utils/          # Helpers
+    └── hal/        # HAL (e.g., GPIO, motor, MPU)
 
 src/                # C++ source files
 ├── core/
 ├── drivers/
 │   └── hal/
-├── utils/
 
 RobotGUI/           # Qt6 GUI frontend (mainwindow, signals, slots)
 config/             # Config files (nav.json, hospital_map.svg, etc.)
 docs/               # Documentation
-├── design/         # Design assets
-└── api/            # (Planned) API specifications
 
-scripts/            # Build or test scripts
 tests/              # Unit and integration tests
 third_party/        # External libs (if any)
 build/              # Build output folder (ignored in repo)
