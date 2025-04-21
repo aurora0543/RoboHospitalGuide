@@ -13,6 +13,21 @@ RoboHospitalGuide is an intelligent hospital guide robot system developed on Ras
 
 The robot navigates patients to their assigned departments using face recognition and hospital database lookup, while dynamically avoiding obstacles and playing guiding audio instructions. The system is structured with a multithreaded backend and a Qt6-based GUI frontend.
 
+### 🧾 Development Diary
+
+We documented the development process through short videos and updates on Douyin (TikTok China).  
+
+📹 Follow our journey here: [@baron0543](https://www.douyin.com/user/baron0543)
+
+The videos include:
+
+- Module integration tests  
+- Troubleshooting and debugging logs  
+- Real-time demonstrations of system functions  
+- Behind-the-scenes development clips
+
+Stay tuned for more updates!
+
 ## 🎯 Key Features
 
 ### 🔐 Facial Recognition
