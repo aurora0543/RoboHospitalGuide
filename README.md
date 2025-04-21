@@ -1,6 +1,6 @@
 # RoboHospitalGuide: Smart Hospital Guide Robot
 
-![body](image/body.png)
+![body](image/body.jpg)
 
 [CHN Version](README_CN.md)  
 
