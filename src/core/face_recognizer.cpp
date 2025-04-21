@@ -3,7 +3,7 @@
 
 bool FaceRecognizerLib::init(const std::string& face_folder) {
     if (!face_cascade.load("/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")) {
-        std::cerr << "无法加载人脸分类器" << std::endl;
+        std::cerr << "unable to load face classifier" << std::endl;
         return false;
     }
     recognizer = cv::face::LBPHFaceRecognizer::create();
@@ -13,7 +13,7 @@ bool FaceRecognizerLib::init(const std::string& face_folder) {
 
 void FaceRecognizerLib::loadFacesFromFolder(const std::string& folder) {
     if (!std::filesystem::is_directory(folder)) {
-        std::cerr << "❌ 提供的路径不是有效的目录: " << folder << std::endl;
+        std::cerr << "none valide path" << folder << std::endl;
         return;
     }
 
@@ -28,7 +28,7 @@ void FaceRecognizerLib::loadFacesFromFolder(const std::string& folder) {
 
         cv::Mat img = cv::imread(fullpath, cv::IMREAD_GRAYSCALE);
         if (img.empty()) {
-            std::cerr << "⚠️ 无法读取图像: " << fullpath << std::endl;
+            std::cerr << "cant load images" << fullpath << std::endl;
             continue;
         }
 
@@ -41,9 +41,9 @@ void FaceRecognizerLib::loadFacesFromFolder(const std::string& folder) {
 
     if (!images.empty()) {
         recognizer->train(images, labels);
-        std::cout << "✅ 已加载 " << images.size() << " 张训练图像\n";
+        std::cout << "loaded " << images.size() << " paictures\n";
     } else {
-        std::cerr << "⚠️ 没有可用的人脸图像用于训练\n";
+        std::cerr << "none valide path" << folder << std::endl;
     }
 }
 

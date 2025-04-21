@@ -140,8 +140,10 @@ build/              # Build output folder (ignored in repo)
 
 ### Building the project
 ```bash
-git clone https://github.com/yourname/RoboHospitalGuide.git
+git clone https://github.com/aurora0543/RoboHospitalGuide.git
 cd RoboHospitalGuide
+git clone https://github.com/aurora0543/RobotGUI.git
+git clone 
 mkdir build && cd build
 cmake ..
 make -j4
