@@ -26,7 +26,7 @@ void checkPause(Motor& motor) {
 
 void moveForward(Motor& motor, int duration_ms) {
     std::cout << "Moving forward for " << duration_ms << " ms...\n";
-    motor.forward(40);
+    motor.forward(50);
     int elapsed = 0;
     while (elapsed < duration_ms) {
         checkPause(motor);
@@ -44,7 +44,7 @@ void turnLeft(Motor& motor, Servo& servo, YawTracker& yaw, float angle) {
     float startAngle = yaw.getAngle();
     
     std::cout << "Turning left " << angle << " degrees...\n";
-    motor.forward(40);
+    motor.forward(50);
     while (true) {
         checkPause(motor);
         float currentAngle = yaw.getAngle();

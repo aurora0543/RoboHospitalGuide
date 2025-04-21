@@ -68,6 +68,7 @@ void Motor::forward(int dutyCycle) {
     right_direction.store(false);
     left_duty.store(dutyCycle);
     right_duty.store(dutyCycle);
+    std::cout << "test 1";
 }
 
 void Motor::backward(int dutyCycle) {
